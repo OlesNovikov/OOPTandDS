@@ -1,0 +1,12 @@
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab3\lab3\ClassLibrary\classesLibrary\classesLibrary\bin\Debug\classesLibrary.dll
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab3\lab3\ClassLibrary\classesLibrary\classesLibrary\bin\Debug\classesLibrary.pdb
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab3\lab3\ClassLibrary\classesLibrary\classesLibrary\obj\Debug\classesLibrary.csprojAssemblyReference.cache
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab3\lab3\ClassLibrary\classesLibrary\classesLibrary\obj\Debug\classesLibrary.csproj.CoreCompileInputs.cache
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab3\lab3\ClassLibrary\classesLibrary\classesLibrary\obj\Debug\classesLibrary.dll
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab3\lab3\ClassLibrary\classesLibrary\classesLibrary\obj\Debug\classesLibrary.pdb
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab4\lab3\ClassLibrary\classesLibrary\classesLibrary\bin\Debug\classesLibrary.dll
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab4\lab3\ClassLibrary\classesLibrary\classesLibrary\bin\Debug\classesLibrary.pdb
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab4\lab3\ClassLibrary\classesLibrary\classesLibrary\obj\Debug\classesLibrary.csprojAssemblyReference.cache
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab4\lab3\ClassLibrary\classesLibrary\classesLibrary\obj\Debug\classesLibrary.csproj.CoreCompileInputs.cache
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab4\lab3\ClassLibrary\classesLibrary\classesLibrary\obj\Debug\classesLibrary.dll
+D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab4\lab3\ClassLibrary\classesLibrary\classesLibrary\obj\Debug\classesLibrary.pdb
