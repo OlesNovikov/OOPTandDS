@@ -1,0 +1,28 @@
+﻿<Window x:Class="lab3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:lab3"
+        mc:Ignorable="d"
+        Title="ShapeEditor" Height="382" Width="668.137">
+    <Grid Loaded="AppLoaded" Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <ListBox Name="shapeViewBox" HorizontalAlignment="Left" Height="252" Margin="42,36,0,0" VerticalAlignment="Top" Width="207"/>
+        <GroupBox Name="shapesGroupBox" Header="Add shapes" HorizontalAlignment="Left" Height="220" Margin="264,36,0,0" VerticalAlignment="Top" Width="185"/>
+        <Button Name="addLineButton" Content="Line" HorizontalAlignment="Left" Height="25" Margin="309,63,0,0" VerticalAlignment="Top" Width="98" Click="AddLineButton_Click"/>
+        <Button Name="addSquareButton" Content="Square" HorizontalAlignment="Left" Height="25" Margin="309,93,0,0" VerticalAlignment="Top" Width="98" Click="AddSquareButton_Click"/>
+        <Button Name="addRectangleButton" Content="Rectangle" HorizontalAlignment="Left" Height="25" Margin="309,123,0,0" VerticalAlignment="Top" Width="98" Click="AddRectangleButton_Click"/>
+        <Button Name="addTriangleButton" Content="Triangle" HorizontalAlignment="Left" Height="25" Margin="309,153,0,0" VerticalAlignment="Top" Width="98" Click="AddTriangleButton_Click"/>
+        <Button Name="addCircleButton" Content="Circle" HorizontalAlignment="Left" Height="25" Margin="309,183,0,0" VerticalAlignment="Top" Width="98" Click="AddCircleButton_Click"/>
+        <Button Name="addEllipseButton" Content="Ellipse" HorizontalAlignment="Left" Height="25" Margin="309,213,0,0" VerticalAlignment="Top" Width="98" Click="AddEllipseButton_Click"/>
+        <Button Name="SerializeButton" Content="Save" HorizontalAlignment="Left" Height="25" Margin="309,263,0,0" VerticalAlignment="Top" Width="98" Click="SerializeButton_Click"/>
+        <Button Name="DeserializeButton" Content="Load" HorizontalAlignment="Left" Height="25" Margin="309,293,0,0" VerticalAlignment="Top" Width="98" Click="DeserializeButton_Click"/>
+        <Button Name="EditButton" Content="Edit" HorizontalAlignment="Left" Height="25" Margin="42,293,0,0" VerticalAlignment="Top" Width="98" Click="EditButton_Click"/>
+        <Button Name="DeleteButton" Content="Delete" HorizontalAlignment="Left" Height="25" Margin="151,293,0,0" VerticalAlignment="Top" Width="98" Click="DeleteButton_Click"/>
+        <StackPanel Name="ShapeProperties" Margin="465,70,10,10" Visibility="Hidden"/>
+        <Label Name="Properties" Content="Properties" Margin="481,24,90,286"/>
+    </Grid>
+</Window>
