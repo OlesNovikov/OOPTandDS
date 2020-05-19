@@ -1,0 +1,28 @@
+﻿<Window x:Class="lab3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:lab3"
+        mc:Ignorable="d"
+        Title="ShapeEditor" Height="382" Width="668.137">
+    <Grid Loaded="AppLoaded" Margin="0,0,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <ListBox Name="shapeViewBox" HorizontalAlignment="Left" Height="252" Margin="19,36,0,0" VerticalAlignment="Top" Width="207"/>
+        <StackPanel Name="shapesGroupBox" HorizontalAlignment="Left" Height="190" Margin="242,36,0,0" VerticalAlignment="Top" Width="182"/>
+        <Button Name="SaveFileButton" Content="Save" HorizontalAlignment="Left" Height="25" Margin="297,263,0,0" VerticalAlignment="Top" Width="80" Click="SaveFileButton_Click"/>
+        <Button Name="LoadFileButton" Content="Load" HorizontalAlignment="Left" Height="25" Margin="297,293,0,0" VerticalAlignment="Top" Width="80" Click="LoadFileButton_Click"/>
+        <Button Name="EditButton" Content="Edit" HorizontalAlignment="Left" Height="25" Margin="19,293,0,0" VerticalAlignment="Top" Width="98" Click="EditButton_Click"/>
+        <Button Name="DeleteButton" Content="Delete" HorizontalAlignment="Left" Height="25" Margin="128,293,0,0" VerticalAlignment="Top" Width="98" Click="DeleteButton_Click"/>
+        <StackPanel Name="ShapeProperties" Margin="465,70,10,10" Visibility="Hidden"/>
+        <Label Name="Properties" Content="Properties" Margin="481,24,90,286"/>
+        <RadioButton Name="ArchivationRadioButton" Content="Archivation" HorizontalAlignment="Left" Margin="325,226,0,0" VerticalAlignment="Top" Width="90"/>
+        <RadioButton Name="EncryptionRadioButton" Content="Encryption" HorizontalAlignment="Left" Margin="325,243,0,0" VerticalAlignment="Top" Width="90"/>
+        <StackPanel Name="WriteToFileMethod" HorizontalAlignment="Left" Height="32" Margin="258,226,0,0" VerticalAlignment="Top" Width="62">
+            <RadioButton Name="BinarySerializationRadioButton" Content="Binary" HorizontalAlignment="Left" VerticalAlignment="Top" Width="59"/>
+            <RadioButton Name="TextSerializationRadioButton" Content="Text" HorizontalAlignment="Left" VerticalAlignment="Top" Width="59" Height="14"/>
+        </StackPanel>
+    </Grid>
+</Window>
