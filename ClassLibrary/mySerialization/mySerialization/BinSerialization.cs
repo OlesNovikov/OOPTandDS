@@ -6,9 +6,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace mySerialization
 {
-    public class BinSerialization : Serialization
+    public class BinSerialization : ISerialization
     {
-        public override string OnSave(List<object> listOfObjects, string fileName)
+        public string OnSave(List<object> listOfObjects, string fileName)
         {
             try
             {
@@ -28,7 +28,7 @@ namespace mySerialization
             }
         }
 
-        public override List<object> OnLoad(string fileName)
+        public List<object> OnLoad(string fileName)
         {
             List<object> listOfObjects = new List<object>();
             try

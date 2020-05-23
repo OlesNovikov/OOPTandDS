@@ -8,12 +8,19 @@ using System.Text;
 
 namespace mySerialization
 {
-    class myTextSerialization : Serialization
+    public class myTextSerialization : ISerialization
     {
         Assembly MainClassesAssembly;
         List<Type> ListOfMainClasses;
 
-        public override string OnSave(List<object> listOfObjects, string fileName)
+        public void LoadMainClasses()
+        {
+            ListOfMainClasses = new List<Type>();
+            MainClassesAssembly = Assembly.LoadFile(@"D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab6\lab3\ClassLibrary\classesLibrary\classesLibrary\bin\Debug\classesLibrary.dll");
+            ListOfMainClasses = MainClassesAssembly.GetTypes().Where(type => type.IsClass).ToList();
+        }
+
+        public string OnSave(List<object> listOfObjects, string fileName)
         {
                 using (StreamWriter streamWriter = new StreamWriter(fileName, false, Encoding.Default))
                 {
@@ -34,14 +41,7 @@ namespace mySerialization
                 return "Serialization was successful!";
         }
 
-        public void LoadMainClasses()
-        {
-            ListOfMainClasses = new List<Type>();
-            MainClassesAssembly = Assembly.LoadFile(@"D:\Oles\БГУИР\2 курс\4 сем\ООТПиСП\лабы\lab6\lab3\ClassLibrary\classesLibrary\classesLibrary\bin\Debug\classesLibrary.dll");
-            ListOfMainClasses = MainClassesAssembly.GetTypes().Where(type => type.IsClass).ToList();
-        }
-
-        public override List<object> OnLoad(string fileName)
+        public List<object> OnLoad(string fileName)
         {
             LoadMainClasses();
             List<object> receivedObjects = new List<object>();
@@ -74,7 +74,6 @@ namespace mySerialization
                             if (line == classItem.ToString())
                             {
                                 CurrentClass = classItem;
-                                //if (receivedObjects.Count != 0) receivedObjects.Add(obj);
                                 obj = MainClassesAssembly.CreateInstance(classItem.FullName);
                                 properties = classItem.GetProperties();
 
