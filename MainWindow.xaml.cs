@@ -1,4 +1,5 @@
 ﻿using myEncryption;
+using mySerialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,11 +15,14 @@ namespace lab3
         List<Type> ListOfMainClasses;
         List<Type> ListOfSerializationClasses;
         List<Type> ListOfEncryptionClasses;
+
         Assembly ArchivationClassesAssembly;
         Assembly MainClassesAssembly;
         Assembly SerializationClassesAssembly;
         Assembly EncyptionClassesAssembly;
-        List<object> ListOfObjects;
+
+        Singleton list;
+
         static int offset = 1;
         string CurrentClassName;
         bool Edit = false;
@@ -62,39 +66,52 @@ namespace lab3
         public void UpdateListBox()
         {
             shapeViewBox.Items.Clear();
-            foreach (var item in ListOfObjects) shapeViewBox.Items.Add(item.GetType().Name);
+            foreach (var item in list.ListOfObjects) shapeViewBox.Items.Add(item.GetType().Name);
         }
 
         public object AddFieldsToObject(Type CurrentClass, int index)
         {
             var obj = MainClassesAssembly.CreateInstance(CurrentClass.FullName);
             var properties = CurrentClass.GetProperties();
-
-            foreach (var property in properties)
+            try
             {
-                if (property.Name == "ShapeName") property.SetValue(obj, CurrentClass.Name);
-                else if (property.PropertyType == typeof(int)) property.SetValue(obj, Int32.Parse(((TextBox)ShapeProperties.Children[index]).Text));
-                else if (property.PropertyType == typeof(float)) property.SetValue(obj, float.Parse(((TextBox)ShapeProperties.Children[index]).Text));
-                else if (property.PropertyType == typeof(string)) property.SetValue(obj, ((TextBox)ShapeProperties.Children[index]).Text);
-                index++;
+                foreach (var property in properties)
+                {
+                    if (property.Name == "ShapeName") property.SetValue(obj, CurrentClass.Name);
+                    else if (property.PropertyType == typeof(int)) property.SetValue(obj, Int32.Parse(((TextBox)ShapeProperties.Children[index]).Text));
+                    else if (property.PropertyType == typeof(float)) property.SetValue(obj, float.Parse(((TextBox)ShapeProperties.Children[index]).Text));
+                    else if (property.PropertyType == typeof(string)) property.SetValue(obj, ((TextBox)ShapeProperties.Children[index]).Text);
+                    index++;
+                }
+                return obj;
             }
-
-            return obj;
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return obj;
+            }
         }
 
         public void SetValuesOnForm(object currentObject, int index)
         {
             var properties = currentObject.GetType().GetProperties();
 
-            foreach (var property in properties)
+            try
             {
-                var value = property.GetValue(currentObject);
+                foreach (var property in properties)
+                {
+                    var value = property.GetValue(currentObject);
 
-                if (property.Name == "ShapeName") ((TextBox)(ShapeProperties.Children[index])).Text = CurrentClassName;
-                else if (property.PropertyType == typeof(int)) ((TextBox)(ShapeProperties.Children[index])).Text = ((int)value).ToString();
-                else if (property.PropertyType == typeof(float)) ((TextBox)(ShapeProperties.Children[index])).Text = ((float)value).ToString();
-                else if (property.PropertyType == typeof(string)) ((TextBox)(ShapeProperties.Children[index])).Text = value.ToString();
-                index++;
+                    if (property.Name == "ShapeName") ((TextBox)(ShapeProperties.Children[index])).Text = CurrentClassName;
+                    else if (property.PropertyType == typeof(int)) ((TextBox)(ShapeProperties.Children[index])).Text = ((int)value).ToString();
+                    else if (property.PropertyType == typeof(float)) ((TextBox)(ShapeProperties.Children[index])).Text = ((float)value).ToString();
+                    else if (property.PropertyType == typeof(string)) ((TextBox)(ShapeProperties.Children[index])).Text = value.ToString();
+                    index++;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -128,19 +145,25 @@ namespace lab3
 
         private void AppLoaded(object sender, RoutedEventArgs e)
         {
-            LoadArchivation();
-            LoadMainClasses();
-            LoadSerialization();
-            LoadEncryption();
-            Singleton singleton = new Singleton();
-            ListOfObjects = singleton.getInstance();
-
-            foreach (var classItem in ListOfMainClasses)
+            try
             {
-                if (!classItem.IsAbstract)
+                LoadArchivation();
+                LoadMainClasses();
+                LoadSerialization();
+                LoadEncryption();
+                list = Singleton.GetInstance();
+
+                foreach (var classItem in ListOfMainClasses)
                 {
-                    CreateShapeAddButtons(classItem, 5);
+                    if (!classItem.IsAbstract)
+                    {
+                        CreateShapeAddButtons(classItem, 5);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -166,105 +189,6 @@ namespace lab3
         {
             if ((bool)EncryptionRadioButton.IsChecked) return true;
             else return false;
-        }
-
-        public void BinarySerialization(string fileName)
-        {
-            try
-            {
-                foreach (var listItem in ListOfSerializationClasses)
-                {
-                    if (listItem.Name == "BinSerialization")
-                    {
-                        var obj = SerializationClassesAssembly.CreateInstance(listItem.FullName);
-
-                        Type t = SerializationClassesAssembly.GetType(listItem.FullName, true, true);
-
-                        MethodInfo method = t.GetMethod("OnSave");
-                        object callMethod = method.Invoke(obj, new object[] { ListOfObjects, fileName });
-                        MessageBox.Show(callMethod.ToString());
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-
-        public void BinaryDeserialization(string fileName)
-        {
-            try
-            {
-                foreach (var listItem in ListOfSerializationClasses)
-                {
-                    if (listItem.Name == "BinSerialization")
-                    {
-                        var obj = SerializationClassesAssembly.CreateInstance(listItem.FullName);
-
-                        Type t = SerializationClassesAssembly.GetType(listItem.FullName, true, true);
-
-                        MethodInfo method = t.GetMethod("OnLoad");
-                        ListOfObjects = (List<object>)method.Invoke(obj, new object[] { fileName });
-
-                        if (ListOfObjects.Count > 0) MessageBox.Show("Deserialization was successful!");
-                        UpdateListBox();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-
-        public void TextSerialization(string fileName)
-        {
-            try
-            {
-                foreach (var listItem in ListOfSerializationClasses)
-                {
-                    if (listItem.Name == "myTextSerialization")
-                    {
-                        var obj = SerializationClassesAssembly.CreateInstance(listItem.FullName);
-
-                        Type t = SerializationClassesAssembly.GetType(listItem.FullName, true, true);
-
-                        MethodInfo method = t.GetMethod("OnSave");
-                        object callMethod = method.Invoke(obj, new object[] { ListOfObjects, fileName });
-                        MessageBox.Show(callMethod.ToString());
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
-        }
-
-        public void TextDeserialization(string fileName)
-        {
-            try
-            {
-                foreach (var listItem in ListOfSerializationClasses)
-                {
-                    if (listItem.Name == "myTextSerialization")
-                    {
-                        var obj = SerializationClassesAssembly.CreateInstance(listItem.FullName);
-
-                        Type t = SerializationClassesAssembly.GetType(listItem.FullName, true, true);
-
-                        MethodInfo method = t.GetMethod("OnLoad");
-                        ListOfObjects = (List<object>)method.Invoke(obj, new object[] { fileName });
-                        if (ListOfObjects.Count > 0) MessageBox.Show("Deserialization was successful!");
-                        UpdateListBox();
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-            }
         }
 
         public void ArchiveFile(string FILE_NAME, string archivedFileName)
@@ -313,39 +237,93 @@ namespace lab3
             }
         }
 
+        private string SerializeFile(string serializedFileName)
+        {
+            string result = "";
+            ISerialization serialization = null;
+
+            try
+            {
+                if (BinarySerializationSelected()) serialization = new BinSerialization();
+                else if (TextSerializationSelected()) serialization = new myTextSerialization();
+                else MessageBox.Show("Select serialization method");
+
+                if (serialization != null)
+                {
+                    SerializationStrategy strategy = new SerializationStrategy(serialization);
+                    result = strategy.OnSave(list.ListOfObjects, serializedFileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return result;
+        }
+
+        private List<object> DeserializeFile(string unzipFileName, string decryptedFileName)
+        {
+            ISerialization deserialization = null;
+            try
+            {
+                if (BinarySerializationSelected()) deserialization = new BinSerialization();
+                else if (TextSerializationSelected()) deserialization = new myTextSerialization();
+                else MessageBox.Show("Select deserialization method");
+
+                if (deserialization != null)
+                {
+                    SerializationStrategy strategy = new SerializationStrategy(deserialization);
+                    if (ArchivationSelected())
+                    {
+                        list.ListOfObjects = strategy.OnLoad(unzipFileName);
+                    }
+                    else if (EncryptionSelected())
+                    {
+                        list.ListOfObjects = strategy.OnLoad(decryptedFileName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            return list.ListOfObjects;
+        }
+
         private void SaveFileButton_Click(object sender, RoutedEventArgs e)
         {
-            IEncryption encoder;
-            string serializedFileName = "SerializedObjects.bindata";
+            string serializedFileName = "SerializedObjects.data";
             string archivedFileName = "ArchivedObjects.data";
             string encryptedFileName = "EncryptedObjects.data";
 
-            if (BinarySerializationSelected()) BinarySerialization(serializedFileName);
-            else if (TextSerializationSelected()) TextSerialization(serializedFileName);
-
-            if (ListOfObjects.Count > 0)
+            try
             {
-                if (ArchivationSelected())
+                if (list.ListOfObjects.Count > 0)
                 {
-                    if (BinarySerializationSelected()) ArchiveFile(serializedFileName, archivedFileName);
-                    else if (TextSerializationSelected()) ArchiveFile(serializedFileName, archivedFileName);
-                }
-                else if (EncryptionSelected())
-                {
-                    foreach (var classItem in ListOfEncryptionClasses)
+                    string serializeResult = SerializeFile(serializedFileName);
+                    MessageBox.Show(serializeResult);
+
+                    if (ArchivationSelected()) ArchiveFile(serializedFileName, archivedFileName);
+                    else if (EncryptionSelected())
                     {
-                        if (classItem.Name == "Encryption")
+                        foreach (var classItem in ListOfEncryptionClasses)
                         {
-                            encoder = new Encryption();
-                            EncryptionAdapter adapter = new EncryptionAdapter(encoder);
-                            if (BinarySerializationSelected()) adapter.OnSave(serializedFileName, encryptedFileName);
-                            else if (TextSerializationSelected()) adapter.OnSave(serializedFileName, encryptedFileName);
+                            if (classItem.Name == "Encryption")
+                            {
+                                IEncryption encoder = new Encryption();
+                                EncryptionAdapter adapter = new EncryptionAdapter(encoder);
+                                adapter.OnSave(serializedFileName, encryptedFileName);
+                            }
                         }
                     }
+                    else MessageBox.Show("Select save method");
                 }
-                else MessageBox.Show("Select save method");
+                else MessageBox.Show("Nothing to save");
             }
-            else MessageBox.Show("Nothing to save");
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void LoadFileButton_Click(object sender, RoutedEventArgs e)
@@ -354,29 +332,27 @@ namespace lab3
             string unzipFileName = "UnzipObjects.data";
             string encryptedFileName = "EncryptedObjects.data";
             string decryptedFileName = "DecryptedObjects.data";
-            IEncryption encoder;
-        
-            if (ArchivationSelected())
-            {
-                UnzipFile(archivedFileName, unzipFileName);
-                if (BinarySerializationSelected()) BinaryDeserialization(unzipFileName);
-                else if (TextSerializationSelected()) TextDeserialization(unzipFileName);
-            }
+
+            if (ArchivationSelected()) UnzipFile(archivedFileName, unzipFileName);
             else if (EncryptionSelected())
             {
                 foreach (var classItem in ListOfEncryptionClasses)
                 {
                     if (classItem.Name == "Encryption")
                     {
-                        encoder = new Encryption();
+                        IEncryption encoder = new Encryption();
                         EncryptionAdapter adapter = new EncryptionAdapter(encoder);
                         adapter.OnLoad(encryptedFileName, decryptedFileName);
                     }
                 }
-                if (BinarySerializationSelected()) BinaryDeserialization(decryptedFileName);
-                else if (TextSerializationSelected()) TextDeserialization(decryptedFileName);
             }
             else MessageBox.Show("Select load method");
+
+            list.ListOfObjects = DeserializeFile(unzipFileName, decryptedFileName);
+
+            if (list.ListOfObjects.Count > 0) MessageBox.Show("Deserialization was successful!");
+            else MessageBox.Show("File is empty");
+            UpdateListBox();
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
@@ -386,7 +362,7 @@ namespace lab3
                 ShapeProperties.Visibility = Visibility.Hidden;
                 int index = shapeViewBox.SelectedIndex;
                 shapeViewBox.Items.RemoveAt(index);
-                ListOfObjects.RemoveAt(index);
+                list.ListOfObjects.RemoveAt(index);
                 UpdateListBox();
             }
             catch
@@ -400,9 +376,9 @@ namespace lab3
             try
             {
                 int index = shapeViewBox.SelectedIndex;
-                CurrentClassName = ListOfObjects[index].GetType().Name;
+                CurrentClassName = list.ListOfObjects[index].GetType().Name;
                 TakeClassName();
-                SetValuesOnForm(ListOfObjects[index], 0);
+                SetValuesOnForm(list.ListOfObjects[index], 0);
                 Edit = true;
             }
             catch
@@ -419,11 +395,11 @@ namespace lab3
                 if (CurrentClassName == CurrentClass.Name)
                 {
                     shape = AddFieldsToObject(CurrentClass, 0);
-                    if (!Edit) ListOfObjects.Add(shape);
+                    if (!Edit) list.ListOfObjects.Add(shape);
                     else
                     {
                         int index = shapeViewBox.SelectedIndex;
-                        ListOfObjects[index] = shape;
+                        list.ListOfObjects[index] = shape;
                     }
                 }
                 

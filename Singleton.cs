@@ -6,13 +6,19 @@ namespace lab3
     [Serializable]
     public class Singleton
     {
-        List<object> ListOfObjects;
+        public List<object> ListOfObjects;
+        private static Singleton instance;
 
-        public List<object> getInstance()
+        private Singleton()
         {
-            if (ListOfObjects == null)
-                ListOfObjects = new List<object>();
-            return ListOfObjects;
+            ListOfObjects = new List<object>();
+        }
+
+        public static Singleton GetInstance()
+        {
+            if (instance == null)
+                instance = new Singleton();
+            return instance;
         }
     }
 }
